@@ -15,7 +15,20 @@ struct list_head *q_new()
 }
 
 /* Free all storage used by queue */
-void q_free(struct list_head *head) {}
+void q_free(struct list_head *l)
+{
+    if (!l)
+        return;  // 鏈表不存在 不做後續操作
+
+    element_t *entry, *safe;  // entry當前元素 //safe是entry的下一個節點
+    list_for_each_entry_safe(entry, safe, l, list) {
+        free(entry->value);
+        free(entry);
+    }
+
+    INIT_LIST_HEAD(l);  // 清空 list，確保指標不指向已釋放的記憶體
+    free(l);            // 釋放 list_head 本身
+}
 
 /* Insert an element at head of queue */
 bool q_insert_head(struct list_head *head, char *s)
