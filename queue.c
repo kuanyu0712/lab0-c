@@ -71,10 +71,16 @@ bool q_insert_head(
 
 
 /* Insert an element at tail of queue */
-bool q_insert_tail(
-    struct list_head *head,
-    char *s)  // 在佇列尾端 (tail) 插入 (insert) 給定的新節點 (以 FIFO 準則);
+bool q_insert_tail(struct list_head *head, char *s)
 {
+    if (!head || !s)  // 檢查是否為 NULL
+        return false;
+
+    element_t *new_e = e_new(s);  // 創建新節點
+    if (!new_e)
+        return false;
+
+    list_add_tail(&new_e->list, head);  // 插入到鏈結串列的尾端
     return true;
 }
 
