@@ -5,22 +5,25 @@
 #include "queue.h"
 
 /* Create an empty queue */
-struct list_head *q_new()
+struct list_head *q_new()  // 建立新的「空」佇列
 {
     struct list_head *new_qhead = malloc(sizeof(struct list_head));
-    if (!new_qhead)
+    if (!new_qhead)  // malloc失敗
         return NULL;
-    INIT_LIST_HEAD(new_qhead);
+    INIT_LIST_HEAD(new_qhead);  // 初始化一個空的循環雙向鏈表
     return new_qhead;
 }
 
 /* Free all storage used by queue */
-void q_free(struct list_head *l)
+void q_free(
+    struct list_head *l)  // 釋放佇列所佔用的記憶體(包括所有節點以及佇列頭)
 {
     if (!l)
         return;  // 鏈表不存在 不做後續操作
 
-    element_t *entry, *safe;  // entry當前元素 //safe是entry的下一個節點
+    element_t *entry,
+        *safe;  // entry當前元素
+                // //safe是entry的下一個節點(避免之後無法訪問下一個節點)
     list_for_each_entry_safe(entry, safe, l, list) {
         free(entry->value);
         free(entry);
@@ -30,7 +33,8 @@ void q_free(struct list_head *l)
     free(l);            // 釋放 list_head 本身
 }
 
-static inline element_t *e_new(char *s)
+static inline element_t *e_new(
+    char *s)  // 創建並初始化一個新的元素（element_t）
 {
     if (!s)
         return NULL;
@@ -52,7 +56,9 @@ static inline element_t *e_new(char *s)
 }
 
 /* Insert an element at head of queue */
-bool q_insert_head(struct list_head *head, char *s)
+bool q_insert_head(
+    struct list_head *head,
+    char *s)  // 在佇列開頭 (head) 插入 (insert) 給定的新節點 (以 LIFO 準則);
 {
     if (!head || !s)
         return false;
@@ -65,10 +71,13 @@ bool q_insert_head(struct list_head *head, char *s)
 
 
 /* Insert an element at tail of queue */
-bool q_insert_tail(struct list_head *head, char *s)
+bool q_insert_tail(
+    struct list_head *head,
+    char *s)  // 在佇列尾端 (tail) 插入 (insert) 給定的新節點 (以 FIFO 準則);
 {
     return true;
 }
+
 
 /* Remove an element from head of queue */
 element_t *q_remove_head(struct list_head *head, char *sp, size_t bufsize)
